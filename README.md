@@ -1,2 +1,5 @@
 # Sayaphitam-DDos
 BIRRUH BIDDAM NAFDHIKA YA AQSA 
+LONG LIVE THE STRUGGLE 
+SOLIDARITAS TANPA BATAS 
+# do not attack government websites 
