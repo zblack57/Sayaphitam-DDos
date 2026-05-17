@@ -16,6 +16,8 @@ MAX_THREADS = 500          # Batas maksimal thread (jangan terlalu tinggi di Ter
 MAX_DURATION = 300         # Maksimal 5 menit (300 detik)
 
 stop_attack = False
+packet_count = 0
+lock = threading.Lock()
 
 def signal_handler(sig, frame):
     global stop_attack
@@ -25,7 +27,10 @@ def signal_handler(sig, frame):
 signal.signal(signal.SIGINT, signal_handler)
 
 def clear():
-    os.system("clear")
+    if os.name == "nt":
+        os.system("cls")
+    else:
+        os.system("clear")
 
 def banner():
     clear()
@@ -39,10 +44,10 @@ def banner():
 \033[97m ▒█████║██╔══██║▒▒▒██║▒▒▒██╔══██║██╔═══╝▒▒▒██╔══██║██║▒▒▒██║▒▒▒██║▒▒██║██║▒╚═╝▒██║▒ 
 \033[97m ▒╚════╝╚═╝▒▒╚═╝▒▒▒╚═╝▒▒▒╚═╝▒▒╚═╝╚═╝▒▒▒▒▒▒▒╚═╝▒▒╚═╝╚═╝▒▒▒╚═╝▒▒▒╚═╝▒▒╚═╝╚═╝▒▒▒▒▒╚═╝▒
 \033[97m ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒""")
-print(f"\033[97m ╔{'═' * 80}╗")
-print(f"\033[97m ║ \033[100m{' ' * 4}github{' ' * 63}\033[0m ║")
-print(f"\033[97m ║ \033[100m{' ' * 4}zblack57{' ' * 56}\033[0m ║")
-print(f"\033[97m ╚{'═' * 80}╝")
+    print(f"\033[97m ╔{'═' * 80}╗")
+    print(f"\033[97m ║ \033[100m{' ' * 4}github{' ' * 63}\033[0m ║")
+    print(f"\033[97m ║ \033[100m{' ' * 4}zblack57{' ' * 56}\033[0m ║")
+    print(f"\033[97m ╚{'═' * 80}╝")
 
 # ====================== UDP FLOOD ======================
 def udp_flood(ip, port, duration, threads, packet_size=1024):
@@ -122,7 +127,14 @@ def main():
     banner()
 
     print(f"{Fore.CYAN}┏━━ Target Configuration ━━⬣")
-    ip = input(f"{Fore.CYAN}┗> Target IP / Domain : {Fore.WHITE}")
+    target_input = input(f"{Fore.CYAN}┗> Target IP / Domain : {Fore.WHITE}")
+    try:
+        ip = socket.gethostbyname(target_input)
+        print(f"{Fore.GREEN}[!] Resolved {target_input} to {ip}")
+    except socket.gaierror:
+        print(f"{Fore.RED}[!] Gagal mendapatkan IP dari domain tersebut.")
+        sys.exit()
+
     try:
         port = int(input(f"{Fore.CYAN}┗> Port               : {Fore.WHITE}"))
     except:
